@@ -1,0 +1,48 @@
+$ python main.py --input device_telemetry.csv --output output.json --threshold 80
+
+Reading: device_telemetry.csv
+Processing 16 row(s)...
+
+  [WARN] Line 15: device 'DEV_F' has invalid/missing temperature ('invalid_temp') — temperature record skipped.
+  [WARN] Line 16: missing device_id — row skipped entirely.
+  [WARN] Line 17: device 'DEV_G' has invalid/missing temperature ('') — temperature record skipped.
+  [INFO] Device 'DEV_B' excluded: avg 81.00°C > threshold 80.0°C.
+  [INFO] Device 'DEV_E' excluded: avg 93.75°C > threshold 80.0°C.
+  [INFO] Device 'DEV_G' excluded: no valid temperature readings.
+
+==============================================================
+  DEVICE LOG SUMMARY
+==============================================================
+  Device      Records   Avg Temp (°C)   Errors
+  ----------------------------------------------------------
+  DEV_A             3           42.00        1
+  DEV_C             2           30.00        0
+  DEV_D             2           80.00        0
+  DEV_F             1           45.00        0
+==============================================================
+  Threshold applied : avg_temperature <= 80.0°C
+  Devices included  : 4
+  Devices excluded  : 3 (DEV_B, DEV_E, DEV_G)
+==============================================================
+
+Results saved to: output.json
+
+$ python chart.py --input output.json --output temperature_chart.png
+Chart saved to: temperature_chart.png
+
+---
+Note: The above output was captured from a run using a temporary mock of
+sanitize_readings(), because the Section 1 implementation has not yet been
+written by the candidate. Once sanitizer.py is implemented, running:
+
+    python main.py
+    python chart.py
+
+will produce identical results (the reference sanitizer used for this run
+follows the same specification as Section 1).
+
+NOTE ON FILTERING:
+- DEV_B: avg 81.00°C — excluded (> 80.0 threshold)
+- DEV_D: avg 80.00°C — RETAINED (equal to threshold, not strictly greater)
+- DEV_E: avg 93.75°C — excluded (> 80.0 threshold)
+- DEV_G: excluded — no valid temperature readings
